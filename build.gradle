@@ -1,0 +1,43 @@
+// 외부 라이브러리를 클래스패스에 추가하는 기능을 한다.
+buildscript{
+    // buildscript 에서 사용할 변수와 값을 지정한다.
+    ext{
+        springBootVersion = '2.1.7.RELEASE'
+    }
+
+    // 라이브러리를 받을 저장소를 지정한다.
+    // mavenCentral() 를 보통 기본으로 지정하며, 요즘에는 jcenter() 를 지정하기도 한다.
+    repositories{
+        mavenCentral()
+        jcenter()
+    }
+
+    // 라이브러리 의존을 받기 위한 설정
+    dependencies{
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+// 필요한 플러그인들을 추가한다
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+// 프로젝트에 대한 설정들이다. 마지막에 sourceCompatibility 는 소스코드의 자바 버전을 의미한다.
+group 'com.group.exam'
+version '1.0-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.projectlombok:lombok")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("com.h2database:h2")
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
