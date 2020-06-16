@@ -40,4 +40,18 @@ public class HelloControllerTest {
                 .andExpect(content().string(hello));//결과를 검증,응답 본문 내용 검증, hello값이 controller에서 온것인지 확인
     }
 
+    @WithMockUser(roles="USER")
+    @Test
+    public void helloDto가_리턴된다() throws Exception {
+        String name = "hello";
+        int amount = 1000;
+
+        mvc.perform(
+                get("/hello/dto")
+                        .param("name", name)
+                        .param("amount", String.valueOf(amount)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(name)))
+                .andExpect(jsonPath("$.amount", is(amount)));
+    }
 }
