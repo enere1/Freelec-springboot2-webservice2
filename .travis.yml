@@ -14,6 +14,9 @@ cache:
 
 script: "./gradlew clean build"
 
+before_install:
+  - chmod +x gradlew
+
 before_deploy:
  - zip -r Freelec-springboot2-webservice2 *
  - mkdir -p deploy
@@ -33,5 +36,5 @@ deploy:
 # CI 실행 완료시 메일로 알람
 notifications:
   email:
-  recipients:
- - enere6@gmail.com
+    recipients:
+      - enere6@gmail.com
