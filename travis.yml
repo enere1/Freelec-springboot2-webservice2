@@ -10,11 +10,10 @@ branches:
     directories:
       - '$HOME/.m2/repository'
       - '$HOME/.gralde'
-
 script: "./gradlew clean build"
 
 # CI 実行終了時　メールで　アラート
 notifications:
   email:
     recipients:
-      - 本人メールアドレス
+      enere6@gmail.com
