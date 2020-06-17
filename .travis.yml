@@ -30,6 +30,18 @@ deploy:
       local_dir: deploy
       wait-until-deployed: true
 
+    - provider: s3
+      access_key_id: AKIAXP6FS33J57HEE54T
+      secret_access_key: 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
+      bucket: freelec-springboot-asemble-deploy
+      key: Freelec-springboot2-webservice2.zip
+      bundle_type : zip
+      application : Freelec-springboot2-webservice2
+      deployment_group : freelec-springboot2-webservice-group
+      region: ap-northeast-1
+      wait-until-deployed: true
+
+
 before_install:
   - chmod +x gradlew
 
