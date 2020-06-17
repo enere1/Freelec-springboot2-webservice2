@@ -21,14 +21,14 @@ before_deploy:
 
 deploy:
     - provider: s3
-       access_key_id: AKIAXP6FS33J57HEE54T
-        secret_access_key: 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
-          bucket: freelec-springboot-asemble-deploy
-            region: ap-northeast-1
-             skip_cleanup: true
-               acl: private
-                 local_dir: deploy
-                   wait-until-deployed: true
+      access_key_id: AKIAXP6FS33J57HEE54T
+      secret_access_key: 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
+      bucket: freelec-springboot-asemble-deploy
+      region: ap-northeast-1
+      skip_cleanup: true
+      acl: private
+      local_dir: deploy
+      wait-until-deployed: true
 
 # CI 실행 완료시 메일로 알람
 notifications:
