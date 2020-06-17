@@ -30,8 +30,11 @@ deploy:
       local_dir: deploy
       wait-until-deployed: true
 
+before_install:
+  - chmod +x gradlew
+
 # CI 실행 완료시 메일로 알람
 notifications:
    email:
      recipients:
-      - enere6@gmail.com
+       - enere6@gmail.com
