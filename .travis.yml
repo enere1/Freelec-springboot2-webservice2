@@ -4,10 +4,10 @@ jdk:
 
 branches:
   only:
-    - master
+    -master
 
 before_install:
-  - chmod +x gradlew
+  -chmod +x gradlew
 
 # Travis CI serverのホーム
   cache:
