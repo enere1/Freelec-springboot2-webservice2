@@ -30,7 +30,7 @@ deploy:
       local_dir: deploy
       wait-until-deployed: true
 
-    - provider: s3
+    - provider: codedeploy
       access_key_id: AKIAXP6FS33J57HEE54T
       secret_access_key: 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
       bucket: freelec-springboot-asemble-deploy
