@@ -26,7 +26,7 @@ apply plugin: 'io.spring.dependency-management'
 
 // 프로젝트에 대한 설정들이다. 마지막에 sourceCompatibility 는 소스코드의 자바 버전을 의미한다.
 group 'com.group.exam'
-version '1.0.1-SNAPSHOT'
+version '1.0.1-SNAPSHOT' + new Date().format("yyyyMMddHHmmss")
 sourceCompatibility = 1.8
 
 repositories {

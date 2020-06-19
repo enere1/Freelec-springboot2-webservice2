@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source:   /
-    destination: /home/ec2-user/app/step2/zip/
+    destination: /home/ec2-user/app/step3/zip/
     overwrite: yes
 
 permissions:
@@ -12,7 +12,15 @@ permissions:
     group: ec2-user
 
 hooks:
+  AfterInstall:
+    - location: stop.sh #NGINXと繋がっていないスプリンブートを終了
+      timeout : 60
+      runas : ec2-user
   ApplicationStart:
-    - location: deploy.sh
+    - location: start.sh #NGINXと繋がっていないスプリンブートをstop.shで終了したもの'profile'で実行
       timeout: 60
       runas: ec2-user
+  ValidateSerivce:
+    - location: health.sh #新しいスプリブートが正常に実行されているか確認
+      timeout: 60
+      runas: ec-2user
