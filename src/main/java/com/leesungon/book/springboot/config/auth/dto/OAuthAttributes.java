@@ -27,23 +27,11 @@ public class OAuthAttributes {
     }
 
     public static OAuthAttributes of(String registrationId ,String userNameAttributeName, Map<String , Object> attributes){
-        if("facebook".equals(registrationId)){
-            return ofFacebook("id",attributes);
-        }
+
         return ofGoogle(userNameAttributeName, attributes);
     }
 
     private static OAuthAttributes ofGoogle(String UserNameAttributeName, Map<String , Object> attributes){
-        return OAuthAttributes.builder()
-                .name((String) attributes.get("name"))
-                .email((String) attributes.get("email"))
-                .picture((String) attributes.get("picture"))
-                .attributes(attributes)
-                .nameAttributeKey(UserNameAttributeName)
-                .build();
-    }
-
-    private static OAuthAttributes ofFacebook(String UserNameAttributeName, Map<String , Object> attributes){
         return OAuthAttributes.builder()
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
