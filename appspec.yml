@@ -20,7 +20,9 @@ hooks:
     - location: start.sh #NGINXと繋がっていないスプリンブートをstop.shで終了したもの'profile'で実行
       timeout: 60
       runas: ec2-user
-  ValidateSerivce:
-    - location: health.sh #新しいスプリブートが正常に実行されているか確認
+  ValidateService:
+    - location: health.sh
       timeout: 60
-      runas: ec-2user
+      runas: ec2-user
+
+
