@@ -13,11 +13,11 @@ permissions:
 
 hooks:
   AfterInstall:
-    - location: stop.sh #NGINXと繋がっていないスプリンブートを終了
+    - location: stop.sh
       timeout : 60
       runas : ec2-user
   ApplicationStart:
-    - location: start.sh #NGINXと繋がっていないスプリンブートをstop.shで終了したもの'profile'で実行
+    - location: start.sh
       timeout: 60
       runas: ec2-user
   ValidateService:
