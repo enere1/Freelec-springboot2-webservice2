@@ -26,10 +26,19 @@ public class indexController {
         }
         return "index";
     }
-    
+
     @GetMapping("/posts/save")
-    public String postsSave(){
+    public String postsSave(@LoginUser SessionUser user, Model model){
+        model.addAttribute("userName", user.getName());
         return "posts-save";
+    }
+
+
+    @GetMapping("/posts/detail/{id}")
+    public String postsDetail(@PathVariable Long id, Model model){
+        PostsResponseDto dto = postsService.findById(id);
+        model.addAttribute("post",dto);
+        return "posts-detail";
     }
 
     @GetMapping("/posts/update/{id}")
@@ -38,5 +47,4 @@ public class indexController {
         model.addAttribute("post",dto);
         return "posts-update";
     }
-
 }

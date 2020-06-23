@@ -11,7 +11,7 @@
             </div>
             <div class="form-group">
                 <label for="author">WRITER</label>
-                <input type="text" class="form-control" id="author" placeholder="INSERT WRITER">
+                <input type="text" class="form-control" id="author" value="{{userName}}" readonly>
             </div>
             <div class="form-group">
                 <label for="content">CONTENT</label>
@@ -22,5 +22,7 @@
         <button type="button" class="btn btn-primary" id="btn-save">REGISTRATION</button>
     </div>
 </div>
+
+<div id="disqus_thread"></div>
 
 {{>layout/footer}}
