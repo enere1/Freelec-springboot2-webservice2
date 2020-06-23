@@ -54,7 +54,7 @@ Nginxを利用Apacheウェブサーバより高性能ウェブサーバです。
 特にreverse proxyを利用してサーバ一つでNginx一つとspring boot jar二つを
 使える。
 
-###step8
+### step8
 ドメイン繋がり、aws certificate　managerで証明書を発行し、https protocolを使う。
 
 ## 全体構造
