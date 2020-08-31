@@ -7,6 +7,7 @@ import com.leesungon.book.springboot.domain.posts.Posts;
 import com.leesungon.book.springboot.domain.posts.PostsRepository;
 import com.leesungon.book.springboot.web.dto.PostsSaveRequestDto;
 import com.leesungon.book.springboot.web.dto.PostsUpdateRequestDto;
+import com.leesungon.book.springboot.web.dto.PostsUploadRequestDto;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -68,10 +70,22 @@ public class PostsApiControllerTest {
          //given
          String title = "title";
          String content = "content";
+
+         PostsUploadRequestDto postsUploadRequestDto = PostsUploadRequestDto.builder()
+                 .fileName("tes1")
+                 .uploadPath("C://upload//2020//07//01")
+                 .uuid("abcde")
+                 .image(true)
+                 .build();
+
+         List<PostsUploadRequestDto> postsUploadRequestDtoList = new ArrayList<PostsUploadRequestDto>();
+         postsUploadRequestDtoList.add(postsUploadRequestDto);
+
          PostsSaveRequestDto requestDto = PostsSaveRequestDto.builder()
                  .title(title)
                  .content(content)
                  .author("author")
+                 .attachList(postsUploadRequestDtoList)
                  .build();
 
          String url = "http://localhost:" + port + "/api/v1/posts";
@@ -86,42 +100,5 @@ public class PostsApiControllerTest {
          assertThat(all.get(0).getTitle()).isEqualTo(title);
          assertThat(all.get(0).getContent()).isEqualTo(content);
      }
-
-     @Test
-     @WithMockUser(roles="USER")
-     public void posts_수정된다() throws Exception {
-          //given
-          Posts savedPosts = postsRepository.save(Posts.builder()
-          .title("title")
-          .content("content")
-          .author("author")
-          .build());
-
-         Long updateId = savedPosts.getId();
-         String expectedTitle = "title2";
-         String expectedContent = "content2";
-
-          PostsUpdateRequestDto requestDto = PostsUpdateRequestDto.builder()
-                  .title(expectedTitle)
-                  .content(expectedContent)
-                  .build();
-
-          String url = "http://localhost:" + port + "/api/v1/posts/"+ updateId;
-
-          HttpEntity<PostsUpdateRequestDto> requestEntity = new HttpEntity<>(requestDto);
-
-          //when
-          ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.PUT ,requestEntity , Long.class);
-         mvc.perform(put(url).contentType(MediaType.APPLICATION_JSON_UTF8)
-                 .content(new ObjectMapper().writeValueAsString(requestDto)))
-                 .andExpect(status().isOk());
-
-         //then
-          List<Posts> all = postsRepository.findAll();
-          assertThat(all.get(0).getTitle()).isEqualTo(expectedTitle);
-          assertThat(all.get(0).getContent()).isEqualTo(expectedContent);
-
-     }
-
 
 }
