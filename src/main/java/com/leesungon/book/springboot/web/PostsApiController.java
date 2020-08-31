@@ -1,22 +1,31 @@
 package com.leesungon.book.springboot.web;
 
+import com.leesungon.book.springboot.config.auth.LoginUser;
+import com.leesungon.book.springboot.config.auth.dto.SessionUser;
+import com.leesungon.book.springboot.domain.posts.upload.Upload;
+import com.leesungon.book.springboot.domain.posts.user.User;
 import com.leesungon.book.springboot.service.posts.PostsService;
-import com.leesungon.book.springboot.web.dto.PostsResponseDto;
-import com.leesungon.book.springboot.web.dto.PostsSaveRequestDto;
-import com.leesungon.book.springboot.web.dto.PostsUpdateRequestDto;
-import jdk.nashorn.internal.objects.annotations.Getter;
+import com.leesungon.book.springboot.web.dto.*;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
+@Log4j
 public class PostsApiController {
 
     private final PostsService postsService;
 
     @PostMapping("/api/v1/posts")
-    public Long save(@RequestBody PostsSaveRequestDto requestDto){
-
+    public Long save(@RequestBody PostsSaveRequestDto requestDto) throws Exception{
         return postsService.save(requestDto);
     }
 
@@ -28,7 +37,6 @@ public class PostsApiController {
     @GetMapping("/api/v1/posts/{id}")
     public PostsResponseDto findByID(@PathVariable Long id){
         return postsService.findById(id);
-
     }
 
     @DeleteMapping("/api/v1/posts/{id}")
@@ -37,5 +45,25 @@ public class PostsApiController {
         return id;
     }
 
+
+    @GetMapping("/api/v1/posts/like/{id}")
+    public int selectPostLike(@LoginUser SessionUser user, @PathVariable Long id){
+        return postsService.selectPostLike(id);
+    }
+
+
+    @PostMapping("/api/v1/posts/like/{id}")
+    public Map postLike(@LoginUser SessionUser user, @PathVariable Long id , @RequestBody PostsLikeRequestDto postsLikeRequestDto){
+        int totalLike = postsService.insertPostLike(id, user, postsLikeRequestDto);
+        Map result = new HashMap<>();
+
+        log.info("totalLike :" + totalLike);
+        result.put("totalLikes", totalLike);
+
+        int totalResult = postsService.selectPostLike(id);
+        result.put("totalResult",totalResult);
+
+        return result;
+    }
 
 }
