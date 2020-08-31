@@ -1,31 +1,115 @@
 {{>layout/header}}
 
-<h1>게시글 수정</h1>
+<style>
+    .uploadResult {
+        width: 100%;
+        background-color: gray;
+    }
+
+    .uploadResult ul {
+        display: flex;
+        flex-flow: row;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .uploadResult ul li {
+        list-style: none;
+        padding: 10px;
+    }
+
+    .uploadResult ul li img {
+        width: 100px;
+    }
+</style>
+
+<style>
+    .bigPictureWrapper {
+        position: absolute;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        top:0%;
+        width:100%;
+        height:100%;
+        background-color: gray;
+        z-index: 100;
+    }
+
+    .bigPicture {
+        position: relative;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
+<h1>ARTICLE UPDATE</h1>
 
 <div class="col-md-12">
     <div class="col-md-4">
         <form>
             <div class="form-group">
-                <label for="title">글 번호</label>
+                <label for="title">ARTICLE NUMBER</label>
                 <input type="text" class="form-control" id="id" value="{{post.id}}" readonly>
             </div>
             <div class="form-group">
-                <label for="title">제목</label>
+                <label for="title">ARTICLE TITLE</label>
                 <input type="text" class="form-control" id="title" value="{{post.title}}">
             </div>
             <div class="form-group">
-                <label for="author"> 작성자 </label>
+                <label for="author">WRITER </label>
                 <input type="text" class="form-control" id="author" value="{{post.author}}" readonly>
             </div>
             <div class="form-group">
-                <label for="content"> 내용 </label>
+                <label for="content">CONTENT </label>
                 <textarea class="form-control" id="content">{{post.content}}</textarea>
             </div>
+            <div class='uploadDiv'>
+                <input type='file' name='uploadFile' multiple>
+            </div>
         </form>
-        <a href="/" role="button" class="btn btn-secondary">취소</a>
-        <button type="button" class="btn btn-primary" id="btn-update">수정 완료</button>
-        <button type="button" class="btn btn-danger" id="btn-delete">삭제</button>
+        <a href="/" role="button" class="btn btn-secondary">CANCLE</a>
+        <button type="button" class="btn btn-primary" id="btn-update">UPDATE COMPLETE</button>
+        <button type="button" class="btn btn-danger" id="btn-delete">DELETE</button>
     </div>
 </div>
+<div class='uploadResult'>
+    <ul>
+    </ul>
+</div>
+<div id="disqus_thread"></div>
+{{>layout/updateFooter}}
+<script>
+$(document).ready(function(){
+var str = "";
+var fileCallPath = "";
+var check = "";
+{{#post}}
+    {{#attachList}}
+        if({{image}}){
+                fileCallPath = "{{uploadPath}}/s_{{uuid}}_{{fileName}}";
+                console.log(fileCallPath);
+                str += "<li data-path= {{uploadPath}} data-uuid= {{uuid}} data-filename= {{fileName}} data-type= {{image}}><div>";
+                str += "<span>{{fileName}}</span>";
+                str += "<button type='button' data-file=\'"+fileCallPath+"\'"
+                str += "data-type='image' class='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
+                str += "<img src= '/posts/display?fileName="+fileCallPath+"'>";
+                str += "</div>";
+                str +"</li>";
+        }else{
+                str += "<li data-path= {{uploadPath}} data-uuid= {{uuid}} data-filename= {{fileName}} data-type= {{image}}><div>";
+                str += "<span>{{fileName}}</span>";
+                str += "<button type='button' data-file=\'"+fileCallPath+"\'"
+                str += "data-type='image' class='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
+                str += "<img src='/img/attach.png'></a>";
+                str += "</div>";
+                str +"</li>";
+        }
+    {{/attachList}}
+{{/post}}
+    $(".uploadResult ul").html(str);
 
-{{>layout/footer}}
+
+});
+</script>

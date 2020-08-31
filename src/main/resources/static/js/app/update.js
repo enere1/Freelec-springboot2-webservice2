@@ -20,94 +20,13 @@ var main = {
         });
 
         $(".uploadResult").on("click","button", function (e){
-                       var targetFile = $(this).data("file");
-                       var type = $(this).data("type");
-                       var targetLi = $(this).closest("li");
-
-                       console.log(targetFile);
-                       console.log(type);
-                       console.log(targetLi);
-
-                         $.ajax({
-                         url : '/api/v1/posts/deleteFile/', //+ id,
-                         data : {fileName: targetFile, type: type},
-                         dataType : 'text',
-                         type : 'DELETE',
-                         }).done(function (result) {
-                         alert('fileDelete');
-                         targetLi.remove();
-                         console.log(result);
-                         }).fail(function (result) {
-                         console.log(result);
-                         alert(JSON.stringify(result));
-                         });
-                   });
-
-          $(".uploadResult").on("click","li", function (e){
-                var point = $(this);
-                _this.download(point);
-           });
-
-          $(".postLike").on("click","li", function(){
-                console.log("like");
-                var id = $('#id').val();
-                var data = { likes : 1 , dislike : 0};
-
-                $.ajax({
-                        type: 'POST',
-                        url: '/api/v1/posts/like/' + id,
-                        dataType: 'json',
-                        contentType: 'application/json; charset = utf-8',
-                        data: JSON.stringify(data)
-                        }).done(function (result) {
-                        showLikeResult(result);
-                        console.log("complete like");
-                        }).fail(function (error) {
-                        alert(JSON.stringify(error));
-                        });
+                console.log("delete file");
+                if(confirm("remove this file? ")){
+                    var targetLi = $(this.closest("li"));
+                    targetLi.remove();
+                }
 
            });
-
-          $(".postDislike").on("click","li",function(){
-            var id = $('#id').val();
-            var data = { likes : 0 , dislike : -1};
-
-            $.ajax({
-                 type: 'POST',
-                 url: '/api/v1/posts/like/' + id,
-                 dataType: 'json',
-                 contentType: 'application/json; charset = utf-8',
-                 data: JSON.stringify(data)
-             }).done(function (result) {
-                 console.log("complete dislike");
-                 showLikeResult(result);
-             }).fail(function (error) {
-                 alert(JSON.stringify(error));
-             });
-          });
-
-          function showLikeResult(result) {
-
-                var totalLikes = result.totalLikes;
-                var totalResult = result.totalResult;
-
-                console.log(totalLikes);
-
-                if(totalLikes == 0){
-                    alert("두번 좋아요는 불가능 합니다");
-                 }
-
-
-                 else if(totalLikes == -1){
-                      alert("두번 싫어요는 불가능 합니다");
-                 }
-
-                 var str = "";
-                 var totalLikeUL = $(".totalLike ul a");
-                 console.log(result);
-                 str += "<li>"+totalResult+"</li>";
-                 totalLikeUL.html(str);
-           }
 
     },
 
@@ -162,9 +81,36 @@ var main = {
     },
 
     update: function () {
+
+            var uploadList;
+            var attachArray=[];
+
+            $(".uploadResult ul li").each(function(i, obj){
+
+              var jobj = $(obj);
+
+                console.dir(jobj);
+                console.log("-------------------------");
+                console.log(jobj.data("filename"));
+
+                uploadList = {
+                    'fileName' : jobj.data("filename"),
+                    'uuid' : jobj.data("uuid"),
+                    'uploadPath' : jobj.data("path"),
+                    'image' : jobj.data("type")
+
+                };
+
+             attachArray[i] = uploadList;
+
+            });
+
+            console.log(attachArray);
+
         var data = {
             title: $('#title').val(),
-            content: $('#content').val()
+            content: $('#content').val(),
+            attachList: attachArray
         };
 
         var id = $('#id').val();
@@ -177,7 +123,7 @@ var main = {
             data: JSON.stringify(data)
         }).done(function () {
             alert('修正しました。');
-            window.location.href = '/';
+            window.location.href = "/posts/detail/"+id;
         }).fail(function (error) {
             alert(JSON.stringify(error));
         });
@@ -295,14 +241,7 @@ var main = {
              });
                     uploadUL.append(str);
         }
-    },
-
-     download: function(Obj) {
-        var liObj = Obj;
-        var path = encodeURIComponent(liObj.data("path")+"/" + liObj.data("uuid") + "_" + liObj.data("filename"));
-        self.location ="/posts/download?fileName="+path
-     }
-
+    }
 
 };
 

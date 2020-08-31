@@ -1,6 +1,6 @@
 {{>layout/header}}
 
-<h1>SpringBoot Ver3</h1>
+<h1>SpringBoot Ver4</h1>
 <div class="col-md-12">
     <div class="row">
         <div class="col-md-6">
@@ -11,7 +11,6 @@
             {{/userName}}
             {{^userName}}
                 <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
-                <a href="/oauth2/authorization/facebook" class="btn btn-success active" role="button">Facebook Login</a>
             {{/userName}}
         </div>
     </div>
@@ -31,7 +30,7 @@
         {{#posts}}
             <tr>
                 <td>{{id}}</td>
-                <td><a href="/posts/update/{{id}}">{{title}}</a></td>
+                <td><a href="/posts/detail/{{id}}">{{title}}</a></td>
                 <td>{{author}}</td>
                 <td>{{modifiedDate}}</td>
             </tr>

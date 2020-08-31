@@ -1,5 +1,6 @@
 package com.leesungon.book.springboot.config.auth.dto;
 
+import com.leesungon.book.springboot.domain.posts.Posts;
 import com.leesungon.book.springboot.domain.posts.user.User;
 import lombok.Getter;
 
