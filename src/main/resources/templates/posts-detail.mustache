@@ -24,6 +24,7 @@
 
 
 
+
 </style>
 
 <style>
@@ -45,6 +46,7 @@
         justify-content: center;
         align-items: center;
     }
+
 
 
 
@@ -117,6 +119,7 @@
 
 
 
+
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by
     Disqus.</a></noscript>
@@ -130,12 +133,9 @@ var check = "";
 {{#post}}
     {{#attachList}}
         if({{image}}){
-                fileCallPath = "{{uploadPath}}/s_{{uuid}}_{{fileName}}";
-                fileCallPath.replace(/\\/g, "/");
-                console.log(fileCallPath);
                 str += "<li data-path= {{uploadPath}} data-uuid= {{uuid}} data-filename= {{fileName}} data-type= {{image}}><div>";
                 str += "<span>{{fileName}}</span>";
-                str += "<img src= '/posts/display?fileName="+fileCallPath+"'>";
+                str += "<img src= {{uploadPath}}></a>";
                 str += "</div>";
                 str +"</li>";
         }else{
@@ -169,6 +169,7 @@ var check = "";
             });
         }
 });
+
 
 
 

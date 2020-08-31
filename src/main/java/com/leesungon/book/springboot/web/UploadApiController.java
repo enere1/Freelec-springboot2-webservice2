@@ -3,12 +3,15 @@ package com.leesungon.book.springboot.web;
 
 import com.leesungon.book.springboot.service.posts.PostsService;
 import com.leesungon.book.springboot.service.posts.UploadService;
+import com.leesungon.book.springboot.web.dto.PostsThumbnailRequestDto;
 import com.leesungon.book.springboot.web.dto.PostsUploadRequestDto;
+import com.leesungon.book.springboot.web.dto.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,10 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
+import java.net.*;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,16 +31,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import static com.leesungon.book.springboot.web.dto.S3Service.CLOUD_FRONT_DOMAIN_NAME;
+
 @RestController
 @RequiredArgsConstructor
 @Log4j
 public class UploadApiController {
 
-    private final UploadService uploadService;
-    private final PostsService postsService;
+    private final S3Service s3Service;
 
     @PostMapping(value = "/api/v1/postsUploadForm", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<PostsUploadRequestDto> uploadForm(MultipartFile[] uploadFile) {
+    public List<PostsUploadRequestDto> uploadForm(MultipartFile[] uploadFile) throws IOException {
 
         List<PostsUploadRequestDto> list = new ArrayList<>();
         String uploadFolder = "C://upload";
@@ -59,7 +60,11 @@ public class UploadApiController {
             log.info("--------------");
             log.info("Upload file Name :" + multipartFile.getOriginalFilename());
             log.info("Upload file Size :" + multipartFile.getSize());
-
+            try {
+                log.info("Upload file inputStream :" + multipartFile.getInputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             String uploadFileName = multipartFile.getOriginalFilename();
             uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("//") + 1);
@@ -84,8 +89,6 @@ public class UploadApiController {
 
                     if (saveFile.exists()) {
                         Thumbnails.of(saveFile).size(190, 150).toFile(thumbnail);
-                    //outputFormat("png").toFile(thumbnail);
-
                     }
 
                     list.add(postsUploadRequestDto);
@@ -110,14 +113,13 @@ public class UploadApiController {
             }
         }
 
-        //List<Long> uploadId = uploadService.save(list);
-        //log.info("list size : " + list.size());
-        //log.info("uploadId size : " + uploadId.size());
-
-        /*for(int i =0; i < list.size(); i ++){
-            log.info("uploadId : " + uploadId.get(i));
-            list.get(i).setUploadId(uploadId.get(i));
-        }*/
+        List<PostsUploadRequestDto> postsUploadRequestDtoList = s3Service.putS3(list, uploadFile);
+        for(PostsUploadRequestDto postsUploadRequestDto : postsUploadRequestDtoList){
+            log.info(postsUploadRequestDto.getFileName());
+            log.info(postsUploadRequestDto.getUuid());
+            log.info(postsUploadRequestDto.getUploadPath());
+            log.info(postsUploadRequestDto.isImage());
+        }
 
         return list;
     }
@@ -177,11 +179,12 @@ public class UploadApiController {
 
     @GetMapping(value = "/posts/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @ResponseBody
-    public ResponseEntity<Resource> downloadFile(@RequestHeader("User-Agent") String userAgent , String fileName){
+    public ResponseEntity<Resource> downloadFile(@RequestHeader("User-Agent") String userAgent , String fileName) throws MalformedURLException {
 
         log.info("donwload file:" + fileName);
+        //fileName = fileName.substring(36,fileName.length());
 
-        Resource resource = new FileSystemResource("C://upload//" + fileName);
+        UrlResource resource = new UrlResource(fileName);
         if(resource.exists() == false){
             return new ResponseEntity<Resource>(HttpStatus.NOT_FOUND);
         }
@@ -190,23 +193,20 @@ public class UploadApiController {
 
         String resourceName = resource.getFilename();
 
-        //remove UUID
-        String resourceOriginalName = resourceName.substring(resourceName.lastIndexOf("_")+1);
-
         HttpHeaders headers =new HttpHeaders();
 
         try {
             String downloadName = null;
             if(userAgent.contains("Trident")){
                 log.info("IE browser");
-                downloadName = URLEncoder.encode(resourceOriginalName,"UTF-8");
+                downloadName = URLEncoder.encode(resourceName,"UTF-8");
                 log.info("IE name:" + downloadName );
             }else if(userAgent.contains("Edge")){
                 log.info("Edge");
-                downloadName = URLEncoder.encode(resourceOriginalName,"UTF-8");
+                downloadName = URLEncoder.encode(resourceName,"UTF-8");
             } else{
                 log.info("Chrome browser");
-                downloadName = new String(resourceOriginalName.getBytes("UTF-8"), "ISO-8859-1");
+                downloadName = new String(resourceName.getBytes("UTF-8"), "ISO-8859-1");
             }
             headers.add("Content-Disposition","attachment;fileName="+downloadName);
         } catch (UnsupportedEncodingException e) {
@@ -216,15 +216,16 @@ public class UploadApiController {
         return new ResponseEntity<Resource>(resource,headers,HttpStatus.OK);
     }
 
-    @GetMapping("/posts/display")
+    /*@GetMapping("/posts/display")
     @ResponseBody
     public ResponseEntity<byte[]> getFile(String fileName){
 
         log.info("file Name : " + fileName);
 
-        File file = new File("c://upload//"+fileName);
-
+        File file = new File(fileName);
+        file.toString().replace("https:\\","https:///");
         log.info("file :" + file);
+        log.info("file.toPath() :" + file.toPath());
 
         ResponseEntity<byte[]> result = null;
 
@@ -238,6 +239,6 @@ public class UploadApiController {
         }
 
         return result;
-    }
+    }*/
 }
 

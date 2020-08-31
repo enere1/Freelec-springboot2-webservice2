@@ -210,6 +210,7 @@ var main = {
 
                 if(obj.image){
 
+                 var thumbnailFile = obj.uploadPath.substr(0,36) + obj.fileName;
                  var fileCallPath =  encodeURIComponent(obj.uploadPath+"/s_"+obj.uuid +"_"+obj.fileName);
                  var originalFileName = encodeURIComponent( obj.uploadPath+"/"+obj.uuid+"_"+obj.fileName);
                 console.log(fileCallPath);
@@ -220,7 +221,7 @@ var main = {
                  			str += "<span>"+obj.fileName+"</span>";
                  			str += "<button type='button' data-file=\'"+fileCallPath+"\'"
                  			str += "data-type='image' class='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
-                 			str += "<img src= '/posts/display?fileName="+fileCallPath+"'></a>";
+                 			str += "<img src= "+thumbnailFile+"></a>";
                  			str += "</div>";
                  			str += "</li>";
 

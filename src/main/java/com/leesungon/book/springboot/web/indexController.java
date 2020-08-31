@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -58,11 +59,15 @@ public class indexController {
     @GetMapping("/posts/detail/{id}")
     public String postsDetail(@PathVariable Long id, Model model){
         log.info("detail : " + id);
+
         PostsResponseDto dto = postsService.findById(id);
+
         List<Upload> attachList = dto.getAttachList();
+
         for(Upload upload : attachList){
             log.info(upload.getId());
         }
+
         model.addAttribute("post",dto);
         return "posts-detail";
     }
