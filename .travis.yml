@@ -33,6 +33,7 @@ deploy:
       acl: private # zipファイル接近をprivateに制定
       local_dir: deploy # before_deployに生成したディレクトリ
       wait-until-deployed: true
+      auto: false
 
     - provider: codedeploy
       access_key_id: AKIAXP6FS33J57HEE54T
