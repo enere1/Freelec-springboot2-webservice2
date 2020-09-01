@@ -76,7 +76,7 @@ public class UploadApiController {
             String uuidFileName = uuid.toString() + "_" + uploadFileName;
 
             try {
-                File saveFile = new File(uploadPath, uuidFileName);
+                File saveFile = new File(uuidFileName);
                 multipartFile.transferTo(saveFile);
 
                 // check image type file
