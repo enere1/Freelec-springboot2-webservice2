@@ -46,17 +46,6 @@ public class UploadApiController {
     public List<PostsUploadRequestDto> uploadForm(MultipartFile[] uploadFile) throws IOException {
 
         List<PostsUploadRequestDto> list = new ArrayList<>();
-        String uploadFolder = "C://upload";
-
-        String uploadFolderPath = getFolder();
-        //make folder
-        File uploadPath = new File(uploadFolder, uploadFolderPath);
-        log.info("upload path:" + uploadPath);
-
-        //make yyyy/MM/dd folder
-        if (uploadPath.exists() == false) {
-            uploadPath.mkdirs();
-        }
 
         for (MultipartFile multipartFile : uploadFile) {
             log.info("--------------");
@@ -73,15 +62,10 @@ public class UploadApiController {
             //中腹防ぐ
             UUID uuid = UUID.randomUUID();
 
-            String uuidFileName = uuid.toString() + "_" + uploadFileName;
-
             try {
-                File saveFile = new File(uuidFileName);
-                multipartFile.transferTo(saveFile);
-
                 // check image type file
                 PostsUploadRequestDto postsUploadRequestDto = PostsUploadRequestDto.builder().fileName(uploadFileName)
-                        .uploadPath(uploadFolderPath)
+                        .uploadPath("null")
                         .uuid(uuid.toString())
                         .image(true)
                         .build();
