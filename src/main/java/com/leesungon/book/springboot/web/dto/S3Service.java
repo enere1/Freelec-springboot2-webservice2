@@ -54,10 +54,12 @@ public class S3Service {
 
         for (int i = 0; i < list.size(); i++) {
             fileName = list.get(i).getFileName();
+            log.info("put start : " + i );
             s3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile[i].getInputStream(), null)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
-
+            log.info("put end : " + i );
             list.get(i).setUploadPath("https://" + CLOUD_FRONT_DOMAIN_NAME + "/" + fileName);
+            log.info(list.get(i).getUploadPath());
         }
 
         log.info(" putS3 process end ");
