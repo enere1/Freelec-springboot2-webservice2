@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -28,17 +29,13 @@ public class S3Service {
 
     public static final String CLOUD_FRONT_DOMAIN_NAME = "dbri32o6g31a.cloudfront.net";
 
-    @Value("${cloud.aws.credentials.accessKey}")
-    private String accessKey;
+    private String accessKey = "AKIAXP6FS33J57HEE54T";
 
-    @Value("${cloud.aws.credentials.secretKey}")
-    private String secretKey;
+    private String secretKey = "jbLNYsDTkzYZ3KJk+Kgk0UskFdCFCfJyZyRQA0Tv";
 
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucket;
+    private String bucket = "freelec-springboot-asemble-deploy";
 
-    @Value("${cloud.aws.region.static}")
-    private String region;
+    private String region = "ap-northeast-1";
 
     @PostConstruct
     public void setS3Client() {
