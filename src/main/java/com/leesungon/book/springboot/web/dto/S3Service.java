@@ -51,7 +51,7 @@ public class S3Service {
 
         log.info(" enter putS3");
         String fileName = null;
-
+        log.info(list.size());
         for (int i = 0; i < list.size(); i++) {
             fileName = list.get(i).getFileName();
             log.info("put start : " + i );
