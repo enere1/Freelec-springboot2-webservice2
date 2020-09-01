@@ -80,43 +80,28 @@ public class UploadApiController {
                 multipartFile.transferTo(saveFile);
 
                 // check image type file
-                if (CheckImageType(saveFile)) {
-                    PostsUploadRequestDto postsUploadRequestDto = PostsUploadRequestDto.builder().fileName(uploadFileName)
-                            .uploadPath(uploadFolderPath)
-                            .uuid(uuid.toString())
-                            .image(true)
-                            .build();
+                PostsUploadRequestDto postsUploadRequestDto = PostsUploadRequestDto.builder().fileName(uploadFileName)
+                        .uploadPath(uploadFolderPath)
+                        .uuid(uuid.toString())
+                        .image(true)
+                        .build();
 
-                    File thumbnail = new File(uploadPath, "s_" + uuidFileName);
+                list.add(postsUploadRequestDto);
 
-                    if (saveFile.exists()) {
-                        Thumbnails.of(saveFile).size(190, 150).toFile(thumbnail);
-                    }
+                for (int i = 0; i < list.size(); i++) {
 
-                    list.add(postsUploadRequestDto);
-
-                    for (int i = 0; i < list.size(); i++) {
-
-                        log.info("getFileName:" + list.get(i).getFileName());
-                        log.info("getUploadPath :" + list.get(i).getUploadPath());
-                        log.info("getUuid:" + list.get(i).getUuid());
-                    }
-                } else {
-                    PostsUploadRequestDto postsUploadRequestDto = PostsUploadRequestDto.builder().fileName(uploadFileName)
-                            .uploadPath(uploadFolderPath)
-                            .uuid(uuid.toString())
-                            .image(false)
-                            .build();
-
-                    list.add(postsUploadRequestDto);
+                    log.info("getFileName:" + list.get(i).getFileName());
+                    log.info("getUploadPath :" + list.get(i).getUploadPath());
+                    log.info("getUuid:" + list.get(i).getUuid());
                 }
+
             } catch (Exception e) {
                 e.fillInStackTrace();
             }
         }
 
         List<PostsUploadRequestDto> postsUploadRequestDtoList = s3Service.putS3(list, uploadFile);
-        for(PostsUploadRequestDto postsUploadRequestDto : postsUploadRequestDtoList){
+        for (PostsUploadRequestDto postsUploadRequestDto : postsUploadRequestDtoList) {
             log.info(postsUploadRequestDto.getFileName());
             log.info(postsUploadRequestDto.getUuid());
             log.info(postsUploadRequestDto.getUploadPath());
@@ -151,18 +136,18 @@ public class UploadApiController {
 
     @DeleteMapping("/api/v1/posts/deleteFile")
     @ResponseBody
-    public ResponseEntity deleteFile(String fileName , String type){
+    public ResponseEntity deleteFile(String fileName, String type) {
         log.info("delete  :" + fileName);
 
         File file;
 
         try {
-            file = new File("c://upload//" + URLDecoder.decode(fileName,"UTF-8"));
+            file = new File("c://upload//" + URLDecoder.decode(fileName, "UTF-8"));
 
             file.delete();
 
-            if(type.equals("image")){
-                String largeFileName = file.getAbsolutePath().replace("s_","");
+            if (type.equals("image")) {
+                String largeFileName = file.getAbsolutePath().replace("s_", "");
                 log.info("largeFileName : " + largeFileName);
                 file = new File(largeFileName);
                 file.delete();
@@ -181,13 +166,13 @@ public class UploadApiController {
 
     @GetMapping(value = "/posts/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     @ResponseBody
-    public ResponseEntity<Resource> downloadFile(@RequestHeader("User-Agent") String userAgent , String fileName) throws MalformedURLException {
+    public ResponseEntity<Resource> downloadFile(@RequestHeader("User-Agent") String userAgent, String fileName) throws MalformedURLException {
 
         log.info("donwload file:" + fileName);
         //fileName = fileName.substring(36,fileName.length());
 
         UrlResource resource = new UrlResource(fileName);
-        if(resource.exists() == false){
+        if (resource.exists() == false) {
             return new ResponseEntity<Resource>(HttpStatus.NOT_FOUND);
         }
 
@@ -195,27 +180,27 @@ public class UploadApiController {
 
         String resourceName = resource.getFilename();
 
-        HttpHeaders headers =new HttpHeaders();
+        HttpHeaders headers = new HttpHeaders();
 
         try {
             String downloadName = null;
-            if(userAgent.contains("Trident")){
+            if (userAgent.contains("Trident")) {
                 log.info("IE browser");
-                downloadName = URLEncoder.encode(resourceName,"UTF-8");
-                log.info("IE name:" + downloadName );
-            }else if(userAgent.contains("Edge")){
+                downloadName = URLEncoder.encode(resourceName, "UTF-8");
+                log.info("IE name:" + downloadName);
+            } else if (userAgent.contains("Edge")) {
                 log.info("Edge");
-                downloadName = URLEncoder.encode(resourceName,"UTF-8");
-            } else{
+                downloadName = URLEncoder.encode(resourceName, "UTF-8");
+            } else {
                 log.info("Chrome browser");
                 downloadName = new String(resourceName.getBytes("UTF-8"), "ISO-8859-1");
             }
-            headers.add("Content-Disposition","attachment;fileName="+downloadName);
+            headers.add("Content-Disposition", "attachment;fileName=" + downloadName);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
-        return new ResponseEntity<Resource>(resource,headers,HttpStatus.OK);
+        return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
     }
 
     /*@GetMapping("/posts/display")
