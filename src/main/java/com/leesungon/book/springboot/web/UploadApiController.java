@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import net.coobird.thumbnailator.Thumbnails;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -35,11 +36,11 @@ import java.util.UUID;
 import static com.leesungon.book.springboot.web.dto.S3Service.CLOUD_FRONT_DOMAIN_NAME;
 
 @RestController
-@AllArgsConstructor
 @Log4j
+@RequiredArgsConstructor
 public class UploadApiController {
 
-    private S3Service s3Service;
+    private final S3Service s3Service;
 
     @PostMapping(value = "/api/v1/postsUploadForm", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<PostsUploadRequestDto> uploadForm(MultipartFile[] uploadFile) throws IOException {
