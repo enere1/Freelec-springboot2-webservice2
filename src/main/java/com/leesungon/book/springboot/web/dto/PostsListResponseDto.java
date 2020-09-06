@@ -11,6 +11,7 @@ public class PostsListResponseDto {
     private String title;
     private String Author;
     private LocalDateTime modifiedDate;
+    private int totalLikes;
 
     public PostsListResponseDto(Posts entity){
         this.id = entity.getId();
@@ -20,5 +21,7 @@ public class PostsListResponseDto {
 
     }
 
-
+    public void setTotalLikes(int totalLikes){
+        this.totalLikes = totalLikes;
+    }
 }

@@ -52,5 +52,5 @@ public class Like {
     public void setUser(User user) {
         this.user = user;
     }
-
+    
 }

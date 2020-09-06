@@ -4,6 +4,7 @@ import com.leesungon.book.springboot.config.auth.LoginUser;
 import com.leesungon.book.springboot.config.auth.dto.SessionUser;
 import com.leesungon.book.springboot.domain.posts.upload.Upload;
 import com.leesungon.book.springboot.service.posts.PostsService;
+import com.leesungon.book.springboot.web.dto.PostsListResponseDto;
 import com.leesungon.book.springboot.web.dto.PostsResponseDto;
 
 
@@ -42,7 +43,15 @@ public class indexController {
 
     @GetMapping("/")
     public String index(Model model, @LoginUser SessionUser user){
-        model.addAttribute("posts", postsService.findAllDesc());
+        List<PostsListResponseDto> postsList = postsService.findAllDesc();
+        for(PostsListResponseDto postsListResponseDto : postsList){
+            int totalLikes = postsService.selectPostLike(postsListResponseDto.getId());
+            postsListResponseDto.setTotalLikes(totalLikes);
+        }
+
+        model.addAttribute("posts", postsList);
+
+
         if(user != null){
             model.addAttribute("userName", user.getName());
         }
