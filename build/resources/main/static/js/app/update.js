@@ -20,139 +20,14 @@ var main = {
         });
 
         $(".uploadResult").on("click","button", function (e){
-                       var targetFile = $(this).data("file");
-                       var type = $(this).data("type");
-                       var targetLi = $(this).closest("li");
-
-                       console.log(targetFile);
-                       console.log(type);
-                       console.log(targetLi);
-
-                         $.ajax({
-                         url : '/api/v1/posts/deleteFile/', //+ id,
-                         data : {fileName: targetFile, type: type},
-                         dataType : 'text',
-                         type : 'DELETE',
-                         }).done(function (result) {
-                         alert('fileDelete');
-                         targetLi.remove();
-                         console.log(result);
-                         }).fail(function (result) {
-                         console.log(result);
-                         alert(JSON.stringify(result));
-                         });
-                   });
-
-          $(".uploadResult").on("click","li", function (e){
-                var point = $(this);
-                _this.download(point);
-           });
-
-          $(".postLike").on("click","li", function(){
-
-                var id = $('#id').val();
-                var data = { likes : 1 , dislike : 0};
-
-                $.ajax({
-                        type: 'POST',
-                        url: '/api/v1/posts/like/' + id,
-                        dataType: 'json',
-                        contentType: 'application/json; charset = utf-8',
-                        data: JSON.stringify(data)
-                        }).done(function (result) {
-                        showLikeResult(result);
-                        console.log("complete like");
-                        }).fail(function (error) {
-                        alert(JSON.stringify(error));
-                        });
+                console.log("delete file");
+                if(confirm("remove this file? ")){
+                    var targetLi = $(this.closest("li"));
+                    targetLi.remove();
+                }
 
            });
 
-           $(".postDislike").on("click","li",function(){
-
-            var id = $('#id').val();
-            var data = { likes : 0 , dislike : -1};
-
-            $.ajax({
-                 type: 'POST',
-                 url: '/api/v1/posts/like/' + id,
-                 dataType: 'json',
-                 contentType: 'application/json; charset = utf-8',
-                 data: JSON.stringify(data)
-             }).done(function (result) {
-                 console.log("complete dislike");
-                 showLikeResult(result);
-             }).fail(function (error) {
-                 alert(JSON.stringify(error));
-             });
-          });
-
-          function showLikeResult(result) {
-
-                var totalLikes = result.totalLikes;
-                var totalResult = result.totalResult;
-
-                if(totalLikes == 0){
-                    if(confirm("좋아요를 취소 하시겠습니까?") == true){
-                       $(".postDislike li").trigger("click");
-                    }else{
-                        return;
-                    }
-                 }
-
-                 else if(totalLikes == -1){
-                    if(confirm("싫어요를 취소 하시겠습니까?") == true){
-                         $(".postLike li").trigger("click");
-                     }else{
-                          return;
-                     }
-                 }
-
-                 else if(totalLikes == 1){
-                    $(".postLike a").css("color","green");
-                    $(".postDislike a").css("opacity", 0.2);
-                 }
-
-
-                 else if(totalLikes == 2){
-                    $(".postDislike a").css("color","red");
-                    $(".postLike a").css("opacity", 0.2);
-                 }
-
-                  else if(totalLikes == 3){
-                      $(".postLike a").css("color","black");
-                      $(".postDislike a").css("opacity", 1);
-                   }
-
-                  else if(totalLikes == 4){
-                      $(".postDislike a").css("color","black");
-                      $(".postLike a").css("opacity", 1);
-                   }
-                 var str = "";
-                 var totalLikeUL = $(".totalLike ul a");
-                 console.log(result);
-                 str += "<li>"+totalResult+"</li>";
-                 totalLikeUL.html(str);
-           }
-
-             function showTotalResult() {
-
-                        var id = $('#id').val();
-                        var str = "";
-                        var totalLikeUL = $(".totalLike ul a");
-
-                        $.ajax({
-                        type: 'GET',
-                        url: '/api/v1/posts/like/' + id,
-                        dataType: 'json',
-                        contentType: 'application/json; charset = utf-8',
-                        }).done(function (result) {
-                        str += "<li>"+result+"</li>";
-                        totalLikeUL.html(str);
-                        }).fail(function (error) {
-                        alert(JSON.stringify(error));
-                        });
-                    }
     },
 
     save: function () {
@@ -206,9 +81,36 @@ var main = {
     },
 
     update: function () {
+
+            var uploadList;
+            var attachArray=[];
+
+            $(".uploadResult ul li").each(function(i, obj){
+
+              var jobj = $(obj);
+
+                console.dir(jobj);
+                console.log("-------------------------");
+                console.log(jobj.data("filename"));
+
+                uploadList = {
+                    'fileName' : jobj.data("filename"),
+                    'uuid' : jobj.data("uuid"),
+                    'uploadPath' : jobj.data("path"),
+                    'image' : jobj.data("type")
+
+                };
+
+             attachArray[i] = uploadList;
+
+            });
+
+            console.log(attachArray);
+
         var data = {
             title: $('#title').val(),
-            content: $('#content').val()
+            content: $('#content').val(),
+            attachList: attachArray
         };
 
         var id = $('#id').val();
@@ -221,7 +123,7 @@ var main = {
             data: JSON.stringify(data)
         }).done(function () {
             alert('修正しました。');
-            window.location.href = '/';
+            window.location.href = "/posts/detail/"+id;
         }).fail(function (error) {
             alert(JSON.stringify(error));
         });
@@ -340,14 +242,7 @@ var main = {
              });
                     uploadUL.append(str);
         }
-    },
-
-     download: function(Obj) {
-        var liObj = Obj;
-        var path = encodeURIComponent(liObj.data("path"));
-        self.location ="/posts/download?fileName="+path
-     }
-
+    }
 
 };
 

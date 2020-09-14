@@ -1,0 +1,189 @@
+{{>layout/header}}
+
+<style>
+    .uploadResult {
+        width: 100%;
+        background-color: gray;
+    }
+
+    .uploadResult ul {
+        display: flex;
+        flex-flow: row;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .uploadResult ul li {
+        list-style: none;
+        padding: 10px;
+    }
+
+    .uploadResult ul li img {
+        width: 100px;
+    }
+
+
+
+
+
+</style>
+
+<style>
+    .bigPictureWrapper {
+        position: absolute;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        top:0%;
+        width:100%;
+        height:100%;
+        background-color: gray;
+        z-index: 100;
+    }
+
+    .bigPicture {
+        position: relative;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+
+
+
+
+</style>
+
+<h1>ARTICLE DETAIL</h1>
+
+<div class="col-md-12">
+    <div class="col-md-4">
+        <form>
+            <div class="form-group">
+                <label for="title">ARTICLE NUMBER</label>
+                <input type="text" class="form-control" id="id" value="{{post.id}}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="title">ARTICLE TITLE</label>
+                <input type="text" class="form-control" id="title" value="{{post.title}}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="author">WRITER </label>
+                <input type="text" class="form-control" id="author" value="{{post.author}}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="content">CONTENT </label>
+                <textarea class="form-control" id="content" readonly>{{post.content}}</textarea>
+            </div>
+        </form>
+        <a href="/" role="button" class="btn btn-secondary">BACK</a>
+        <a href="/posts/update/{{post.id}}" role="button" class="btn btn-primary" id="updateBtn">UPDATE</a>
+    </div>
+</div>
+<div class='totalLike' style="text-align: center;">
+    <ul>
+        <a class="btn btn-outline-dark heart"></a>
+    </ul>
+</div>
+<div class='postLike' style="text-align: center;">
+    <a class="btn btn-outline-dark heart">
+        <li><img id="like" src='/img/up.png'></li>
+    </a>
+</div>
+<div class='postDislike' style="text-align: center;">
+    <a class="btn btn-outline-dark heart">
+        <li><img id="dislike" src='/img/down.png'></li>
+    </a>
+</div>
+<div class='uploadResult'>
+    <ul>
+    </ul>
+</div>
+<div id="disqus_thread"></div>
+<script>
+
+    /**
+     *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+    /*
+    var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+    (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://leesungonboard.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+
+
+
+
+
+
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by
+    Disqus.</a></noscript>
+<div id="disqus_thread"></div>
+{{>layout/footer}}
+<script>
+$(document).ready(function(){
+
+if("{{userName}}" == "{{post.author}}"){
+  $("#updateBtn").show();
+}else{
+  $("#updateBtn").hide();
+}
+
+var str = "";
+var fileCallPath = "";
+var check = "";
+{{#post}}
+    {{#attachList}}
+        if({{image}}){
+                str += "<li data-path= {{uploadPath}} data-uuid= {{uuid}} data-filename= {{fileName}}
+         data-type= {{image}}><div>";
+                str += "<span>{{fileName}}</span>";
+                str += "<img src= {{uploadPath}}></a>";
+                str += "</div>";
+                str +"</li>";
+        }else{
+                str += "<li data-path= {{uploadPath}} data-uuid= {{uuid}} data-filename= {{fileName}}
+         data-type= {{image}}><div>";
+                str += "<span>{{fileName}}</span>";
+                str += "<img src='/img/attach.png'></a>";
+                str += "</div>";
+                str +"</li>";
+        }
+    {{/attachList}}
+{{/post}}
+    $(".uploadResult ul").html(str);
+    showTotalResult();
+
+    function showTotalResult() {
+
+            var id = $('#id').val();
+            var str = "";
+            var totalLikeUL = $(".totalLike ul a");
+
+            $.ajax({
+            type: 'GET',
+            url: '/api/v1/posts/like/' + id,
+            dataType: 'json',
+            contentType: 'application/json; charset = utf-8',
+            }).done(function (result) {
+            str += "<li>"+result+"</li>";
+            totalLikeUL.html(str);
+            }).fail(function (error) {
+            alert(JSON.stringify(error));
+            });
+        }
+});
+
+
+
+
+
+</script>
