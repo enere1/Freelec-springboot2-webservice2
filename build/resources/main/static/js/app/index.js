@@ -49,7 +49,10 @@ var main = {
            });
 
           $(".postLike").on("click","li", function(){
-
+             var clicked = $(".postLike a").css("opacity");
+               if(clicked == 0.2){
+                    return
+               }
                 var id = $('#id').val();
                 var data = { likes : 1 , dislike : 0};
 
@@ -69,7 +72,10 @@ var main = {
            });
 
            $(".postDislike").on("click","li",function(){
-
+            var clicked = $(".postDislike a").css("opacity");
+               if(clicked == 0.2){
+                    return
+            }
             var id = $('#id').val();
             var data = { likes : 0 , dislike : -1};
 
@@ -94,6 +100,7 @@ var main = {
 
                 if(totalLikes == 0){
                     if(confirm("좋아요를 취소 하시겠습니까?") == true){
+                       $(".postDislike a").css("opacity", 0.21);
                        $(".postDislike li").trigger("click");
                     }else{
                         return;
@@ -102,6 +109,7 @@ var main = {
 
                  else if(totalLikes == -1){
                     if(confirm("싫어요를 취소 하시겠습니까?") == true){
+                         $(".postLike a").css("opacity", 0.21);
                          $(".postLike li").trigger("click");
                      }else{
                           return;

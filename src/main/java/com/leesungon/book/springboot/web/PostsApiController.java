@@ -54,6 +54,7 @@ public class PostsApiController {
         int totalLike = postsService.selectPostLike(id);
         int like = postsService.selectLikeUser(id, user);
 
+        //結果をMapに入れる。
         likeMap.put("totalLike",totalLike);
         likeMap.put("like",like);
 
