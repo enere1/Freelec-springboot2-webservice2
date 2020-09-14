@@ -138,20 +138,16 @@ if("{{userName}}" == "{{post.author}}"){
 }
 
 var str = "";
-var fileCallPath = "";
-var check = "";
 {{#post}}
     {{#attachList}}
         if({{image}}){
-                str += "<li data-path= {{uploadPath}} data-uuid= {{uuid}} data-filename= {{fileName}}
-         data-type= {{image}}><div>";
+                str += "<li data-path= {{uploadPath}} data-uuid= {{uuid}} data-filename= {{fileName}} data-type= {{image}}><div>";
                 str += "<span>{{fileName}}</span>";
                 str += "<img src= {{uploadPath}}></a>";
                 str += "</div>";
                 str +"</li>";
         }else{
-                str += "<li data-path= {{uploadPath}} data-uuid= {{uuid}} data-filename= {{fileName}}
-         data-type= {{image}}><div>";
+                str += "<li data-path= {{uploadPath}} data-uuid= {{uuid}} data-filename= {{fileName}} data-type= {{image}}><div>";
                 str += "<span>{{fileName}}</span>";
                 str += "<img src='/img/attach.png'></a>";
                 str += "</div>";
@@ -161,7 +157,6 @@ var check = "";
 {{/post}}
     $(".uploadResult ul").html(str);
     showTotalResult();
-
     function showTotalResult() {
 
             var id = $('#id').val();

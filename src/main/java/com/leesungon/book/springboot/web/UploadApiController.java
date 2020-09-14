@@ -5,6 +5,7 @@ import com.leesungon.book.springboot.web.dto.PostsUploadRequestDto;
 import com.leesungon.book.springboot.service.posts.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
+import org.apache.tika.Tika;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.*;
 import java.nio.file.Files;
@@ -54,13 +56,24 @@ public class UploadApiController {
 
             try {
                 // check image type file
-                PostsUploadRequestDto postsUploadRequestDto = PostsUploadRequestDto.builder().fileName(uploadFileName)
-                        .uploadPath("null")
-                        .uuid(uuid.toString())
-                        .image(true)
-                        .build();
-
-                list.add(postsUploadRequestDto);
+                Tika tika = new Tika();
+                InputStream inputStream = multipartFile.getInputStream();
+                String mimeType = tika.detect(inputStream);
+                if (mimeType.startsWith("image")) {
+                    PostsUploadRequestDto postsUploadRequestDto = PostsUploadRequestDto.builder().fileName(uploadFileName)
+                            .uploadPath("null")
+                            .uuid(uuid.toString())
+                            .image(true)
+                            .build();
+                    list.add(postsUploadRequestDto);
+                }else {
+                    PostsUploadRequestDto postsUploadRequestDto = PostsUploadRequestDto.builder().fileName(uploadFileName)
+                            .uploadPath("null")
+                            .uuid(uuid.toString())
+                            .image(false)
+                            .build();
+                    list.add(postsUploadRequestDto);
+                }
 
                 for (int i = 0; i < list.size(); i++) {
 
@@ -84,29 +97,6 @@ public class UploadApiController {
 
         return list;
     }
-
-    private String getFolder() {
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-        Date date = new Date();
-
-        String str = sdf.format(date);
-
-        return str.replace("-", File.separator);
-    }
-
-    private boolean CheckImageType(File file) {
-        try {
-            String contentType = Files.probeContentType(file.toPath());
-
-            return contentType.startsWith("image");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
 
     @DeleteMapping("/api/v1/posts/deleteFile")
     @ResponseBody

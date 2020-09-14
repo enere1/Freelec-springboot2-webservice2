@@ -51,6 +51,7 @@ dependencies {
     compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.5'
     // AWS S3
     compile group: 'org.springframework.cloud', name: 'spring-cloud-aws-context', version: '2.2.1.RELEASE'
+    compile group: 'org.apache.tika', name: 'tika-core', version: '1.22'
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.security:spring-security-test')
     testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'

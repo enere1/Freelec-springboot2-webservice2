@@ -72,10 +72,4 @@ public class S3Service {
 
         return list;
     }
-
-    public void deleteFile(){
-
-    }
-
-
 }

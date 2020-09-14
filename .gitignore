@@ -1,6 +1,5 @@
 # Project exclude paths
 .gradle
 .idea
-.travis.yml
 application.yml
 application-oauth.properties
