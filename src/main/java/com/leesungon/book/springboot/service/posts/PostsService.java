@@ -109,7 +109,6 @@ public class PostsService {
         }
 
         if (postLike >= postDislike) {
-            log.info(postLike - postDislike);
             return postLike + postDislike;
         } else {
             return postDislike + postLike;
@@ -133,25 +132,27 @@ public class PostsService {
                 totalLike += postLike.getLikes();
             }
 
+            log.info("totalLike :" + totalLike);
+            log.info("totalDislike :" + totalDislike);
+
             if (totalLike >= totalDislike) {
                 total = totalLike + totalDislike;
             }  else {
                 total = totalDislike + totalLike;
             }
 
-            log.info("total :" + total);
-
-            if (total == 1 && postsLikeRequestDto.getDislike() == -1) {
+            if(total == 1 && postsLikeRequestDto.getDislike() == -1 ){
                 passInsert = true;
-            } else if (total == -1 && postsLikeRequestDto.getLikes() == 1) {
+            }else if(total == -1 && postsLikeRequestDto.getLikes() == 1){
                 passInsert = true;
-            } else if (total == 0) {
-                passInsert = true;
-            } else if(total == 1 && postsLikeRequestDto.getLikes() == 1){
+            }else if(total == 1){
                 return 0;
-            }  else if(total == -1 && postsLikeRequestDto.getDislike() == -1){
+            }else if(total == -1){
                 return -1;
+            }else if(total == 0){
+                passInsert = true;
             }
+
         }else{
             passInsert = true;
         }
@@ -167,7 +168,20 @@ public class PostsService {
             likeRepository.save(like);
             em.flush();
             em.clear();
+
         }
-        return 1;
+
+        //return
+        if(total == 1 && postsLikeRequestDto.getDislike() == -1 ){
+            return 3;
+        }else if(total == -1 && postsLikeRequestDto.getLikes() == 1){
+            return 4;
+        }else if(postsLikeRequestDto.getLikes() == 1){
+            return 1;
+        }else{
+            return 2;
+        }
+
+
     }
 }

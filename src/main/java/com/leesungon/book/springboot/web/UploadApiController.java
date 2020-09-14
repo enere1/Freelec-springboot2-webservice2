@@ -1,24 +1,16 @@
 
 package com.leesungon.book.springboot.web;
 
-import com.leesungon.book.springboot.service.posts.PostsService;
-import com.leesungon.book.springboot.service.posts.UploadService;
-import com.leesungon.book.springboot.web.dto.PostsThumbnailRequestDto;
 import com.leesungon.book.springboot.web.dto.PostsUploadRequestDto;
-import com.leesungon.book.springboot.web.dto.S3Service;
-import lombok.AllArgsConstructor;
+import com.leesungon.book.springboot.service.posts.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
-import net.coobird.thumbnailator.Thumbnails;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,8 +24,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
-import static com.leesungon.book.springboot.web.dto.S3Service.CLOUD_FRONT_DOMAIN_NAME;
 
 @RestController
 @Log4j
@@ -186,30 +176,5 @@ public class UploadApiController {
 
         return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
     }
-
-    /*@GetMapping("/posts/display")
-    @ResponseBody
-    public ResponseEntity<byte[]> getFile(String fileName){
-
-        log.info("file Name : " + fileName);
-
-        File file = new File(fileName);
-        file.toString().replace("https:\\","https:///");
-        log.info("file :" + file);
-        log.info("file.toPath() :" + file.toPath());
-
-        ResponseEntity<byte[]> result = null;
-
-        HttpHeaders header = new HttpHeaders();
-        try {
-            header.add("Content-type", Files.probeContentType(file.toPath()));
-            result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file),header, HttpStatus.OK);
-            log.info("result : " + result);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }*/
 }
 

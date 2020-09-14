@@ -25,6 +25,7 @@
 
 
 
+
 </style>
 
 <style>
@@ -46,6 +47,7 @@
         justify-content: center;
         align-items: center;
     }
+
 
 
 
@@ -75,7 +77,7 @@
             </div>
         </form>
         <a href="/" role="button" class="btn btn-secondary">BACK</a>
-        <a href="/posts/update/{{post.id}}" role="button" class="btn btn-primary">UPDATE</a>
+        <a href="/posts/update/{{post.id}}" role="button" class="btn btn-primary" id="updateBtn">UPDATE</a>
     </div>
 </div>
 <div class='totalLike' style="text-align: center;">
@@ -120,6 +122,7 @@
 
 
 
+
 </script>
 <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by
     Disqus.</a></noscript>
@@ -127,19 +130,28 @@
 {{>layout/footer}}
 <script>
 $(document).ready(function(){
+
+if("{{userName}}" == "{{post.author}}"){
+  $("#updateBtn").show();
+}else{
+  $("#updateBtn").hide();
+}
+
 var str = "";
 var fileCallPath = "";
 var check = "";
 {{#post}}
     {{#attachList}}
         if({{image}}){
-                str += "<li data-path= {{uploadPath}} data-uuid= {{uuid}} data-filename= {{fileName}} data-type= {{image}}><div>";
+                str += "<li data-path= {{uploadPath}} data-uuid= {{uuid}} data-filename= {{fileName}}
+         data-type= {{image}}><div>";
                 str += "<span>{{fileName}}</span>";
                 str += "<img src= {{uploadPath}}></a>";
                 str += "</div>";
                 str +"</li>";
         }else{
-                str += "<li data-path= {{uploadPath}} data-uuid= {{uuid}} data-filename= {{fileName}} data-type= {{image}}><div>";
+                str += "<li data-path= {{uploadPath}} data-uuid= {{uuid}} data-filename= {{fileName}}
+         data-type= {{image}}><div>";
                 str += "<span>{{fileName}}</span>";
                 str += "<img src='/img/attach.png'></a>";
                 str += "</div>";
@@ -169,6 +181,7 @@ var check = "";
             });
         }
 });
+
 
 
 

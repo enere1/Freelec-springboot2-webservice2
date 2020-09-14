@@ -49,7 +49,7 @@ var main = {
            });
 
           $(".postLike").on("click","li", function(){
-                console.log("like");
+
                 var id = $('#id').val();
                 var data = { likes : 1 , dislike : 0};
 
@@ -68,7 +68,8 @@ var main = {
 
            });
 
-          $(".postDislike").on("click","li",function(){
+           $(".postDislike").on("click","li",function(){
+
             var id = $('#id').val();
             var data = { likes : 0 , dislike : -1};
 
@@ -91,17 +92,42 @@ var main = {
                 var totalLikes = result.totalLikes;
                 var totalResult = result.totalResult;
 
-                console.log(totalLikes);
-
                 if(totalLikes == 0){
-                    alert("두번 좋아요는 불가능 합니다");
+                    if(confirm("좋아요를 취소 하시겠습니까?") == true){
+                       $(".postDislike li").trigger("click");
+                    }else{
+                        return;
+                    }
                  }
-
 
                  else if(totalLikes == -1){
-                      alert("두번 싫어요는 불가능 합니다");
+                    if(confirm("싫어요를 취소 하시겠습니까?") == true){
+                         $(".postLike li").trigger("click");
+                     }else{
+                          return;
+                     }
                  }
 
+                 else if(totalLikes == 1){
+                    $(".postLike a").css("color","green");
+                    $(".postDislike a").css("opacity", 0.2);
+                 }
+
+
+                 else if(totalLikes == 2){
+                    $(".postDislike a").css("color","red");
+                    $(".postLike a").css("opacity", 0.2);
+                 }
+
+                  else if(totalLikes == 3){
+                      $(".postLike a").css("color","black");
+                      $(".postDislike a").css("opacity", 1);
+                   }
+
+                  else if(totalLikes == 4){
+                      $(".postDislike a").css("color","black");
+                      $(".postLike a").css("opacity", 1);
+                   }
                  var str = "";
                  var totalLikeUL = $(".totalLike ul a");
                  console.log(result);
@@ -109,6 +135,24 @@ var main = {
                  totalLikeUL.html(str);
            }
 
+             function showTotalResult() {
+
+                        var id = $('#id').val();
+                        var str = "";
+                        var totalLikeUL = $(".totalLike ul a");
+
+                        $.ajax({
+                        type: 'GET',
+                        url: '/api/v1/posts/like/' + id,
+                        dataType: 'json',
+                        contentType: 'application/json; charset = utf-8',
+                        }).done(function (result) {
+                        str += "<li>"+result+"</li>";
+                        totalLikeUL.html(str);
+                        }).fail(function (error) {
+                        alert(JSON.stringify(error));
+                        });
+                    }
     },
 
     save: function () {

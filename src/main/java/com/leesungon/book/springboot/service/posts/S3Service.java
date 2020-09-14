@@ -1,4 +1,4 @@
-package com.leesungon.book.springboot.web.dto;
+package com.leesungon.book.springboot.service.posts;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.leesungon.book.springboot.web.dto.PostsUploadRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +51,7 @@ public class S3Service {
                 .build();
     }
 
-    public List<PostsUploadRequestDto> putS3(List<PostsUploadRequestDto> list,MultipartFile[] uploadFile) throws IOException {
+    public List<PostsUploadRequestDto> putS3(List<PostsUploadRequestDto> list, MultipartFile[] uploadFile) throws IOException {
         ObjectMetadata metadata = new ObjectMetadata();
         log.info(" enter putS3");
         String fileName = null;

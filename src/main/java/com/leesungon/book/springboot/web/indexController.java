@@ -66,17 +66,14 @@ public class indexController {
 
 
     @GetMapping("/posts/detail/{id}")
-    public String postsDetail(@PathVariable Long id, Model model){
+    public String postsDetail(@LoginUser SessionUser user,@PathVariable Long id, Model model){
         log.info("detail : " + id);
 
         PostsResponseDto dto = postsService.findById(id);
 
         List<Upload> attachList = dto.getAttachList();
 
-        for(Upload upload : attachList){
-            log.info(upload.getId());
-        }
-
+        model.addAttribute("userName",user.getName());
         model.addAttribute("post",dto);
         return "posts-detail";
     }
