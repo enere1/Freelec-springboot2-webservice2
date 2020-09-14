@@ -184,4 +184,36 @@ public class PostsService {
 
 
     }
+
+    public int selectLikeUser(Long id, SessionUser user){
+        List<Like> whoClickLike = likeRepository.findWhoClickLike(user.getEmail(), id);
+        int totalDislike = 0;
+        int totalLike = 0;
+        int total = 0;
+
+        if (whoClickLike.size() > 0) {
+
+            for (Like postLike : whoClickLike) {
+                totalDislike += postLike.getDislike();
+                totalLike += postLike.getLikes();
+            }
+
+            log.info("totalLike :" + totalLike);
+            log.info("totalDislike :" + totalDislike);
+
+            if (totalLike >= totalDislike) {
+                total = totalLike + totalDislike;
+            }  else {
+                total = totalDislike + totalLike;
+            }
+        }else{
+            return 0;
+        }
+
+        return total;
+    }
+
+
 }
+
+

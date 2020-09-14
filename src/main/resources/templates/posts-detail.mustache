@@ -174,12 +174,28 @@ var check = "";
             dataType: 'json',
             contentType: 'application/json; charset = utf-8',
             }).done(function (result) {
-            str += "<li>"+result+"</li>";
+            var totalLike = result.totalLike;
+            var like = result.like;
+            str += "<li>"+totalLike+"</li>";
             totalLikeUL.html(str);
+            personClickBefore(like);
             }).fail(function (error) {
             alert(JSON.stringify(error));
             });
         }
+
+     function personClickBefore(result) {
+         if(result == 0){
+            return
+         }else if(result == 1){
+            $(".postLike a").css("color","green");
+            $(".postDislike a").css("opacity", 0.2);
+         }else if(result == -1){
+            $(".postDislike a").css("color","red");
+            $(".postLike a").css("opacity", 0.2);
+         }
+     }
+
 });
 
 

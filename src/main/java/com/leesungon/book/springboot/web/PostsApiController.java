@@ -47,8 +47,17 @@ public class PostsApiController {
 
 
     @GetMapping("/api/v1/posts/like/{id}")
-    public int selectPostLike(@LoginUser SessionUser user, @PathVariable Long id){
-        return postsService.selectPostLike(id);
+    public Map selectPostLike(@LoginUser SessionUser user, @PathVariable Long id){
+
+        Map likeMap = new HashMap<>();
+
+        int totalLike = postsService.selectPostLike(id);
+        int like = postsService.selectLikeUser(id, user);
+
+        likeMap.put("totalLike",totalLike);
+        likeMap.put("like",like);
+
+        return likeMap;
     }
 
 
