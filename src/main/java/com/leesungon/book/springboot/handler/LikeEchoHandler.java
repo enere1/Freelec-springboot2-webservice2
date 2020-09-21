@@ -42,13 +42,14 @@ public class LikeEchoHandler extends TextWebSocketHandler {
         if(StringUtils.isNotBlank(msg)){
             String [] strs = msg.split(",");
             if(strs != null && strs.length == 3){
-                String user = strs[0];
+                String boardWriter = strs[0];
                 String bno = strs[1];
                 String title = strs[2];
+                String clicker = strs[3];
 
-                WebSocketSession postLikeSession = userSessions.get(user);
+                WebSocketSession postLikeSession = userSessions.get(boardWriter);
                 if(postLikeSession != null){
-                    TextMessage textMessage = new TextMessage(user + "님이" + "<a href='/posts/detail/"+ bno + "'>" + title + "게시글에 좋아요를 눌렀습니다");
+                    TextMessage textMessage = new TextMessage(clicker + "님이" + "<a href='/posts/detail/"+ bno + "'>" + title + "게시글에 좋아요를 눌렀습니다");
                     postLikeSession.sendMessage(textMessage);
                 }
             }
