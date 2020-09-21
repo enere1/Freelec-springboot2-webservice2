@@ -41,7 +41,7 @@ public class LikeEchoHandler extends TextWebSocketHandler {
         String msg = message.getPayload();
         if(StringUtils.isNotBlank(msg)){
             String [] strs = msg.split(",");
-            if(strs != null && strs.length == 3){
+            if(strs != null && strs.length == 4){
                 String boardWriter = strs[0];
                 String bno = strs[1];
                 String title = strs[2];
