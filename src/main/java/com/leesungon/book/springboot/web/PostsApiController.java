@@ -72,6 +72,7 @@ public class PostsApiController {
 
         int totalResult = postsService.selectPostLike(id);
         result.put("totalResult",totalResult);
+        result.put("user",user.getName());
 
         return result;
     }
