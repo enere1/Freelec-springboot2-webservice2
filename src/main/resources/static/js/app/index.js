@@ -97,7 +97,7 @@ var main = {
 
                 var totalLikes = result.totalLikes;
                 var totalResult = result.totalResult;
-
+                var user = result.user;
                 if(totalLikes == 0){
                     if(confirm("좋아요를 취소 하시겠습니까?") == true){
                        $(".postDislike a").css("opacity", 0.21);
@@ -119,6 +119,9 @@ var main = {
                  else if(totalLikes == 1){
                     $(".postLike a").css("color","green");
                     $(".postDislike a").css("opacity", 0.2);
+                    var bno = $("#id").val();
+                    var title = $("#title").val();
+                    socket.send(user + "," + bno + "," + title);
                  }
 
 

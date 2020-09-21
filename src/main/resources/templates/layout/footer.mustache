@@ -1,7 +1,35 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.3.0/sockjs.min.js"></script>
 <!-- index.js 추가-->
-<script src ="/js/app/index.js"></script>
+<script src="/js/app/index.js"></script>
+<script>
+var socket = null;
+$(document).ready(function(){
+      connectSocketJS();
+});
+
+function connectSocketJS(){
+ var sock = new SockJS("https://www.leesungonboard.com/postLike");
+    socket = sock;
+    sock.onopen = function () {
+        console.log('Info: connection opened.');
+        sock.send("hi~");
+
+        sock.onmessage = function (event) {
+            let $socketAlert = $('div#socketAlert');
+            $socketAlert.html(event.data);
+            $socketAlert.css('display','block');
+            setTimeout(function(){
+                $socketAlert.css('display','none');
+            },3000);
+	        console.log(event.data+'\n');
+        };
+        sock.onclose = function (event) {
+            console.log('Info: connection closed.');
+        };
+    };
+}
+</script>
 </body>
 </html>

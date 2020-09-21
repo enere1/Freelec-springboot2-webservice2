@@ -50,6 +50,7 @@ dependencies {
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.5'
     compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.5'
     // AWS S3
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-websocket', version: '2.0.4.RELEASE'
     compile group: 'org.springframework.cloud', name: 'spring-cloud-aws-context', version: '2.2.1.RELEASE'
     compile group: 'org.apache.tika', name: 'tika-core', version: '1.22'
     testCompile('org.springframework.boot:spring-boot-starter-test')
